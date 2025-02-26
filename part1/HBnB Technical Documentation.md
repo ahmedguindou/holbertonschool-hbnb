@@ -10,7 +10,7 @@ The purpose of this document is to provide a comprehensive blueprint for the HBn
 
 ![][image1]
 
-The HBnB system is structured into three primary layers:
+The HBnB system is structured into three primary layers: 
 
 * **Presentation Layer:** Handles API endpoints and user interactions.  
 * **Business Logic Layer:** Contains core application logic and entity relationships.  
