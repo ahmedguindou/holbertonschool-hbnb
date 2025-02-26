@@ -8,7 +8,7 @@ The purpose of this document is to provide a comprehensive blueprint for the HBn
 
 ### **High-Level Package Diagram**
 
-![High-Level Package Diagram](images/REGISTER.png)
+![High-Level Package Diagram](images/0-UML.png)
 
 The HBnB system is structured into three primary layers: 
 
@@ -22,7 +22,7 @@ The system follows the **facade pattern** to simplify interactions between layer
 
 ### **Class Diagram**
 
-[image2]
+![Class Diagram](images/1-HBnB Business Logic Layer – Class Diagram.png)
 
 #### 
 
