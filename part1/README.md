@@ -8,7 +8,7 @@ The purpose of this document is to provide a comprehensive blueprint for the HBn
 
 ### **High-Level Package Diagram**
 
-![][image1]
+[image1]
 
 The HBnB system is structured into three primary layers: 
 
@@ -22,7 +22,7 @@ The system follows the **facade pattern** to simplify interactions between layer
 
 ### **Class Diagram**
 
-![][image2]
+[image2]
 
 #### 
 
@@ -73,7 +73,7 @@ The system follows the **facade pattern** to simplify interactions between layer
 User Registration: Validates and stores user data (checks email, hashes  
 passwords).
 
-![][image3]
+[image3]
 
 * User submits registration details.  
 * API validates input and forwards data to the Business Logic Layer.  
@@ -95,7 +95,7 @@ passwords).
 
 #### **4.2 Place Creation**
 
-![][image4]
+[image4]
 
 * User submits place details.  
 * API forwards the request to the BLL for validation.  
@@ -107,7 +107,7 @@ passwords).
 
 #### **4.3 Review Submission**
 
-![][image5]
+[image5]
 
 * User submits a review with place ID.  
 * API validates and forwards the request to the BLL.  
@@ -125,7 +125,7 @@ passwords).
 
 #### **4.4 Fetching a List of Places**
 
-![][image6]
+[image6]
 
 * User requests places with filters.  
 * API forwards request to the BLL for filtering and validation.  
