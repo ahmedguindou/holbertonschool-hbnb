@@ -8,7 +8,7 @@ The purpose of this document is to provide a comprehensive blueprint for the HBn
 
 ### **High-Level Package Diagram**
 
-[image1]
+![High-Level Package Diagram](part1/REGISTER.png)
 
 The HBnB system is structured into three primary layers: 
 
