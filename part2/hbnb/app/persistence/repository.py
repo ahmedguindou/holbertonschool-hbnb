@@ -25,6 +25,7 @@ class Repository(ABC):
     def get_by_attribute(self, attr_name, attr_value):
         pass
 
+
 class InMemoryRepository(Repository):
     def __init__(self):
         self._storage = {}
@@ -38,10 +39,11 @@ class InMemoryRepository(Repository):
     def get_all(self):
         return list(self._storage.values())
 
-    def update(self, obj_id, data):
+    def update(self, obj_id, updated_data):
+        """Update user details"""
         obj = self.get(obj_id)
         if obj:
-            obj.update(data)
+            obj.update(updated_data)
 
     def delete(self, obj_id):
         if obj_id in self._storage:
@@ -49,3 +51,4 @@ class InMemoryRepository(Repository):
 
     def get_by_attribute(self, attr_name, attr_value):
         return next((obj for obj in self._storage.values() if getattr(obj, attr_name) == attr_value), None)
+    
