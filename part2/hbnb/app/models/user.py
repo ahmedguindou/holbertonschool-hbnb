@@ -1,23 +1,76 @@
+#!/usr/bin/python3
+'''User Class module
+Defines a User class that inherits from BaseModel
+including attributes for user information and validation'''
+
+
 import re
 from .base_model import BaseModel
-from .place import Place  
+
 
 class User(BaseModel):
+    '''Represents a user with various attributes and restrictions'''
+
     def __init__(self, first_name, last_name, email, is_admin=False):
+        '''Initialize a new User instance with validation'''
         super().__init__()
-        self.first_name = first_name[:50]
-        self.last_name = last_name[:50]
-        self.email = email if self.validate_email(email) else None
+        self.first_name = first_name
+        self.last_name = last_name
+        self.email = email
         self.is_admin = is_admin
-        self.places = []  # List to store places owned by this user
 
-    def validate_email(self, email):
-        """Validates email format."""
-        pattern = r"[^@]+@[^@]+\.[^@]+"
-        return re.match(pattern, email) is not None
+    @property
+    def first_name(self):
+        return self._first_name
 
-    def add_place(self, place):
-        """Add a place to the user's list of owned places."""
-        if not isinstance(place, Place):
-            raise ValueError("Only Place instances can be added.")
-        self.places.append(place)
+    @first_name.setter
+    def first_name(self, value):
+        if len(value) <= 0 or len(value) > 50 or not re.fullmatch(r'^[A-Za-zÀ-ÖØ-öø-ÿ -\']+$',
+                                               value):
+            raise ValueError(
+                "First name must be present with a maximum of"
+                " 50 characters and can only contain letters and "
+                "spaces ,- and \'."
+            )
+        if not isinstance(value, str):
+            raise TypeError("First name must be a string of characters.")
+        self._first_name = value
+
+    @property
+    def last_name(self):
+        return self._last_name
+
+    @last_name.setter
+    def last_name(self, value):
+        if len(value) <= 0 or len(value) > 50 or not re.fullmatch(r'^[A-Za-zÀ-ÖØ-öø-ÿ -\']+$',
+                                               value):
+            raise ValueError(
+                "Last name must be present with a maximum of"
+                " 50 characters and can only contain letters and "
+                "spaces ,- and \'."
+            )
+        if not isinstance(value, str):
+            raise TypeError("Last name must be a string of characters.")
+        self._last_name = value
+
+    @property
+    def email(self):
+        return self._email
+
+    @email.setter
+    def email(self, value):
+        if not re.fullmatch(
+            r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$', value
+        ):
+            raise ValueError("The email format is invalid.")
+        self._email = value
+
+    @property
+    def is_admin(self):
+        return self._is_admin
+
+    @is_admin.setter
+    def is_admin(self, value):
+        if not isinstance(value, bool):
+            raise TypeError("Admin must be a boolean.")
+        self._is_admin = value
