@@ -1,4 +1,3 @@
-#!/usr/bin/python3
 '''Base Model module.
 This module defines a base class for other models,
 providing unique ID generation and timestamp management.

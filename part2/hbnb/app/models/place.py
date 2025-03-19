@@ -1,6 +1,4 @@
-#!/usr/bin/python3
 '''Place Class'''
-
 from datetime import datetime
 from .base_model import BaseModel
 from .user import User
