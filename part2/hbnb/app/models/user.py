@@ -1,4 +1,3 @@
-#!/usr/bin/python3
 '''User Class module
 Defines a User class that inherits from BaseModel
 including attributes for user information and validation'''

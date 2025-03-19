@@ -1,4 +1,3 @@
-import re
 from app.persistence.repository import InMemoryRepository
 from app.models.user import User
 from app.models.amenity import Amenity
