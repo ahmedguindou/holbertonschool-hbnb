@@ -1,32 +1,24 @@
-''' Amenity Class represents an amenity, inheriting from BaseModel'''
-
-
-from .base_model import BaseModel
-
+from app import db
+from .basemodel import BaseModel
+from sqlalchemy.orm import validates
 
 class Amenity(BaseModel):
-    '''Represents an amenity with attributes and restrictions'''
-    def __init__(self, name):
-        '''Initialize a new Amenity instance with restrictions'''
-        super().__init__()
-        self._name = name
+    """Represents an amenity in the hbnb app."""
+    __tablename__ = 'amenities'
 
-    @property
-    def name(self):
-        return self._name
+    name = db.Column(db.String(50), nullable=False)
 
-    @name.setter
-    def name(self, value):
+    @validates('name')
+    def validate_name(self, key, value):
         if not isinstance(value, str):
-            raise TypeError("Amenity name must be a string of characters.")
-        if not value or len(value) > 50:
-            raise ValueError(
-                "Amenity name must be a string of 1 to 50 characters."
-            )
-        self._name = value
+            raise TypeError("Name is invalid")
+        if not value:
+            raise ValueError("Name is required")
+        if len(value) > 50:
+            raise ValueError("Name is too long")
+        return value
 
     def to_dict(self):
-        """Convert the Amenity object to a dictionary."""
         return {
             "id": self.id,
             "name": self.name
