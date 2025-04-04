@@ -8,15 +8,15 @@ api = Namespace('users', description='User operations')
 
 # Define the user model for input validation and documentation
 user_model = api.model('User', {
-    'first_name': fields.String(required=True, description="User first name", example="John"),
-    'last_name': fields.String(required=True, description="User last name", example="Doe"),
-    'email': fields.String(required=True, description="User email", example="john@email.com"),
-    'password': fields.String(required=True, description="User password", example="Johnd0e!")
+    'first_name': fields.String(required=True, description="User first name"),
+    'last_name': fields.String(required=True, description="User last name"),
+    'email': fields.String(required=True, description="User email"),
+    'password': fields.String(required=True, description="User password")
 })
 
 user_update_model = api.model('User Update', {
-    'first_name': fields.String(description='First name of the user', example="Jane"),
-    'last_name': fields.String(description='Last name of the user', example="Doe")
+    'first_name': fields.String(description='First name of the user'),
+    'last_name': fields.String(description='Last name of the user')
 })
 
 

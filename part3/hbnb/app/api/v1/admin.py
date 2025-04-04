@@ -8,7 +8,8 @@ user_model_admin = api.model('User', {
     'first_name': fields.String(required=True, description="User first name"),
     'last_name': fields.String(required=True, description="User last name"),
     'email': fields.String(required=True, description="User email"),
-    'password': fields.String(required=True, description="User password")
+    'password': fields.String(required=True, description="User password"),
+    'is_admin': fields.Boolean(required=False, description="Admin status")
 })
 
 amenity_model = api.model('Amenity', {
@@ -51,6 +52,7 @@ class AdminUserCreate(Resource):
         if facade.get_user_by_email(email):
             api.abort(400, 'Email already registered')
 
+        user_data["is_admin"] = True
         try:
             new_user = facade.create_user(user_data)
         except (ValueError, TypeError) as e:
