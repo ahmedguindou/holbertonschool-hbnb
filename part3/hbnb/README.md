@@ -52,7 +52,7 @@ erDiagram
     Amenity ||--o{ Place_Amenity : belongs_to
     
     User {
-        string id PK
+        string id 
         string first_name
         string last_name
         string email
@@ -61,49 +61,41 @@ erDiagram
     }
     
     Place {
-        string id PK
+        string id 
         string title
         string description
         float price
         float latitude
         float longitude
-        string owner_id FK
+        string owner_id 
     }
     
     Review {
-        string id PK
+        string id 
         string text
         int rating
-        string user_id FK
-        string place_id FK
+        string user_id 
+        string place_id 
     }
     
     Amenity {
-        string id PK
+        string id 
         string name
     }
     
     Place_Amenity {
-        string place_id FK
-        string amenity_id FK
+        string place_id 
+        string amenity_id 
     }
 ```
 
-## Resources
-
-- JWT Authentication: [Flask-JWT-Extended Documentation](https://flask-jwt-extended.readthedocs.io/)
-- SQLAlchemy ORM: [SQLAlchemy Documentation](https://docs.sqlalchemy.org/)
-- SQLite: [SQLite Documentation](https://www.sqlite.org/docs.html)
-- MySQL: [MySQL Documentation](https://dev.mysql.com/doc/)
-- Flask Documentation: [Flask Official Documentation](https://flask.palletsprojects.com/)
-- Mermaid.js for ER Diagrams: [Mermaid.js Documentation](https://mermaid-js.github.io/mermaid/)
 
 ## Installation and Setup
 
 1. Clone the repository:
    ```
-   git clone <repository-url>
-   cd hbnb-backend
+   git clone https://github.com/ahmedguindou/holbertonschool-hbnb/tree/main
+   cd holbertonschool-hbnb
    ```
 
 2. Install dependencies:
@@ -111,20 +103,7 @@ erDiagram
    pip install -r requirements.txt
    ```
 
-3. Set up environment variables:
-   ```
-   export FLASK_APP=app.py
-   export FLASK_ENV=development
-   ```
-
-4. Initialize the database:
-   ```
-   flask db init
-   flask db migrate -m "Initial migration"
-   flask db upgrade
-   ```
-
-5. Run the application:
+3. Run the application:
    ```
    flask run
    ```
