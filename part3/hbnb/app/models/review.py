@@ -1,40 +1,34 @@
-from .basemodel import BaseModel
+#!/usr/bin/python3
+"""
+this module contain a class Review
+"""
+from .base_model import BaseModel
 from app import db
-from sqlalchemy.orm import validates
+from sqlalchemy.dialects.postgresql import UUID
+import uuid
 
 
 class Review(BaseModel):
+    """represents a Review tied to Place by Composition and dependent on User"""
     __tablename__ = 'reviews'
-
+    
+    text = db.Column(db.String(500), nullable=True)
     rating = db.Column(db.Integer, nullable=False)
-    text = db.Column(db.Text, nullable=False)
-    place_id = db.Column(db.Integer, db.ForeignKey('places.id'), nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    place_id = db.Column(db.String(36), db.ForeignKey('places.id'), nullable=False)
+    user_id = db.Column(db.String(36), db.ForeignKey('users.id'), nullable=False)
     
+    def __init__(self, rating, text):
+        super().__init__()
+        self.rating = rating
+        self.text = text
+        self.validate_review()
 
-    @validates('text')
-    def validate_text(self, key, value):
-        if not isinstance(value, str):
-            raise TypeError("Text is not valid")
-        if not value:
-            raise TypeError("Text is required")
-        return value
+    def validate_review(self):
+        """Validates review informations format"""
 
-    @validates('rating')
-    def validate_rating(self, key, value):
-        if not value:
-            raise TypeError("Rating is required")
-        if not isinstance(value, int):
-            raise TypeError("Rating is not valid")
-        if value < 1 or value > 5:
-            raise ValueError("Rating must be between 1 and 5")
-        return value
-    
-    def to_dict(self):
-        return {
-            "id": self.id,
-            "text": self.text,
-            "rating": self.rating,
-            "user_id": self.user_id,
-            "place_id": self.place_id
-        }
+        if not isinstance(self.text, str) or not self.text.strip():
+            raise ValueError("Text is required and must be a non-empty string")
+        if not isinstance(self.rating, int) or not (1 <= self.rating <= 5):
+            raise ValueError("Rating must be an integer between 1 and 5")
+        
+

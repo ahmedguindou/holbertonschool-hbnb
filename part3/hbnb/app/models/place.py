@@ -1,21 +1,45 @@
+#!/usr/bin/python3
+"""
+this module contain a class Place
+"""
+from .base_model import BaseModel
 from app import db
-from .basemodel import BaseModel
-from sqlalchemy.orm import validates, relationship
-from .relation import place_amenity
+from app.models.association_tables import place_amenity_association
 
 
 class Place(BaseModel):
+    """Represents a place that can be rented in the HbnB app"""
     __tablename__ = 'places'
 
-    title = db.Column(db.String(100), nullable=False)
-    description = db.Column(db.Text, nullable=True)
+    title = db.Column(db.String(50), nullable=False)
+    description = db.Column(db.String(500), nullable=False)
     price = db.Column(db.Float, nullable=False)
     latitude = db.Column(db.Float, nullable=False)
     longitude = db.Column(db.Float, nullable=False)
-    owner_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    owner = relationship("User", back_populates="places")
-    reviews = relationship('Review', backref='places', lazy=True)
-    place_amenities = db.relationship('Amenity', secondary=place_amenity, lazy='subquery', backref=db.backref('places', lazy=True))
+    user_id = db.Column(db.String(36), db.ForeignKey('users.id'), nullable=False)
+    review_list = db.relationship('Review', backref='reviewed_place', lazy=True)
+    associated_amenities = db.relationship('Amenity', secondary=place_amenity_association, backref='places_associated')
+
+    def __init__(self, title, description, price, latitude, longitude):
+        super().__init__()
+        self.title = title
+        self.description = description
+        self.price = price
+        self.latitude = latitude
+        self.longitude = longitude
+        self.validate_place()
+
+    def validate_place(self):
+        """Validate place informations format"""
+        if not self.title:
+            raise ValueError("Title is required")
+        if (not self.price) or self.price <= 0:
+            raise ValueError("Price is required and must be positive")
+        if (not self.latitude) or self.latitude < -90 or self.latitude > 90:
+            raise ValueError("Latitude must be between -90 and 90")
+        if (not self.longitude) or self.longitude < -180 or self.longitude > 180:
+            raise ValueError("Longitude must be between -180 and 180")
+
 
     def add_review(self, review):
         """Add a review to the place."""
@@ -25,58 +49,13 @@ class Place(BaseModel):
         """Add an amenity to the place."""
         self.amenities.append(amenity)
 
-    @validates('title')
-    def validate_title(self, key, value):
-        if not value:
-            raise TypeError("Title is required")
-        if not isinstance(value, str):
-            raise TypeError("Title value is not valid")
-        if len(value) > 100:
-            raise ValueError("Title is too long")
-        return value
-
-    @validates('description')
-    def validate_description(self, key, value):
-        if not isinstance(value, str):
-            raise TypeError("Description value is not valid")
-        return value
-
-    @validates('price')
-    def validate_price(self, key, value):
-        if not value:
-            raise TypeError("Price is required")
-        if not isinstance(value, (float, int)):
-            raise TypeError("Price value is not valid")
-        if value < 0:
-            raise ValueError("Price must be a positive number")
-        return value
-
-    @validates('latitude')
-    def validate_latitude(self, key, value):
-        if not value:
-            raise TypeError("Latitude is required")
-        if not isinstance(value, float):
-            raise TypeError("Latitude is not valid")
-        if value < -90 or value > 90:
-            raise ValueError("Latitude must be between -90 and 90")
-        return value
-
-    @validates('longitude')
-    def validate_longitude(self, key, value):
-        if not value:
-            raise TypeError("Longitude is required")
-        if not isinstance(value, float):
-            raise TypeError("Longitude is not valid")
-        if value < -180 or value > 180:
-            raise ValueError("Longitude must be between -180 and 180")
-        return value
-    
-    def to_dict(self):
-        return {
-            "id": self.id,
+    def list_by_place(self):
+        """Dictionary of details for place."""
+        place_info = {
             "title": self.title,
             "description": self.description,
             "price": self.price,
             "latitude": self.latitude,
-            "longitude": self.longitude,
+            "longitude": self.longitude
         }
+        return place_info

@@ -1,25 +1,29 @@
+#!/usr/bin/python3
+"""
+this module contain a class Amenity
+"""
+from .base_model import BaseModel
 from app import db
-from .basemodel import BaseModel
-from sqlalchemy.orm import validates
+from app.models.association_tables import place_amenity_association
+
 
 class Amenity(BaseModel):
-    """Represents an amenity in the hbnb app."""
+    """Represents an Amenity, Aggregated with Place"""
     __tablename__ = 'amenities'
 
-    name = db.Column(db.String(50), nullable=False)
+    name = db.Column(db.String(100), nullable=False)
+    description = db.Column(db.String(500), nullable=True)
+    associated_places = db.relationship('Place', secondary=place_amenity_association, backref='amenities_associated')
 
-    @validates('name')
-    def validate_name(self, key, value):
-        if not isinstance(value, str):
-            raise TypeError("Name is invalid")
-        if not value:
-            raise ValueError("Name is required")
-        if len(value) > 50:
-            raise ValueError("Name is too long")
-        return value
+    def __init__(self, name, description):
+        super().__init__()
+        self.name = name
+        self.description = description
+        self.validate_amenity()
 
-    def to_dict(self):
-        return {
-            "id": self.id,
-            "name": self.name
-        }
+    def validate_amenity(self):
+        """validates amenity informations format"""
+        if not self.name or self.name.strip() == "":
+            raise ValueError("name is required")
+        if not self.description or self.description.strip() == "":
+            raise ValueError("description is required")
