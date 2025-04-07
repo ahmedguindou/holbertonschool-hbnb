@@ -7,5 +7,4 @@ class ReviewRepository(SQLAlchemyRepository):
         super().__init__(Review)
 
     def get_reviews_by_place(self, place_id):
-        # Retrieve all reviews for a specific place
         return self.model.query.filter_by(place_id=place_id).all()

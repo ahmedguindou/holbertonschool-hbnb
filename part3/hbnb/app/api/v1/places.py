@@ -37,7 +37,7 @@ class PlaceList(Resource):
         place_data['user_id'] = current_user_id
         try:
             new_place = facade.create_place(place_data)
-            associated_amenities = [amenity.id for amenity in new_place.associated_amenities]
+            associated_amenities = [amenity.name for amenity in new_place.associated_amenities]
             return {'id': new_place.id, 'title': new_place.title, 'description': new_place.description, 'price': new_place.price, 'latitude': new_place.latitude, 'longitude' : new_place.longitude, 'associated_amenities': associated_amenities}, 201
         except ValueError:
             return {'error': 'Invalid input data'}, 400
@@ -50,7 +50,6 @@ class PlaceList(Resource):
         if not places_data:
             return {'error': 'No places found'}, 404
     
-        # Extract informations for dict
         return [{
             'id': place_data['place']['id'],
             'title': place_data['place']['title'],
@@ -83,26 +82,17 @@ class PlaceResource(Resource):
     @jwt_required()
     def put(self, place_id):
         """Update a place's information"""
-        # Retrieve the place by its ID
         place_data = facade.get_place(place_id)
-        # Get the current logged-in user ID
         current_user_id = get_jwt_identity()
-        # Check if the place exists
         if not place_data:
             return {'error': 'Place not found'}, 404
-        # Ensure only the owner of the place can modify it
         if place_data['place']['user_id'] != current_user_id:
             return {'error': 'Unauthorized action'}, 403
-        # Get the updated place data from the request payload
         user_place = api.payload
-        # Update the place in the database
         updated_place = facade.update_place(place_id, user_place)
-        # Check if the update was successful
         if not updated_place:
             return {'error': 'Failed to update this place'}, 500
-        # Get associated amenities for the updated place
         associated_amenities = [amenity.id for amenity in updated_place.associated_amenities]
-        # Return the updated place details along with associated amenities
         return {
             'id': updated_place.id,
             'title': updated_place.title,
@@ -121,17 +111,13 @@ class PlaceResource(Resource):
     def delete(self, place_id):
         """Delete a review"""
         place = facade.get_place(place_id)
-        # check if place exists in the database
         if not place:
             return {'error': 'Place not found'}, 404
-        # users can only delete places they own expect if is_admin=True
         current_user = get_jwt_identity()
         claims = get_jwt()
         if place.user_id != current_user and not claims.get('is_admin'):
             return {'error': 'Unauthorized action'}, 403
-        # delete place in the database
         deleted_place = facade.delete_place(place_id)
-        # check if database issue occured when deleting review
         if not deleted_place:
             return {'error': 'Failed to delete this place'}, 500
         return {'message': 'Place deleted successfully'}, 200
@@ -152,17 +138,13 @@ class AdminPlaceModify(Resource):
         if not claims.get('is_admin'):
             return {'error': 'Admin privileges required'}, 403
        
-        # Set is_admin default to False if not exists
        
         place = facade.get_place(place_id)
         if not place:
             return {'error': 'Place not found'}, 404
        
-        # Logic to update the place
         user_place = api.payload
-        # updates the place information in the database
         updated_place = facade.update_place(place_id, user_place)
-        # check if database issue occured when updating place
         if not updated_place:
             return {'error': 'Failed to update this place'}, 500
         return {'id': updated_place.id, 'title': updated_place.title, 'description': updated_place.description, 'price': updated_place.price, 'latitude': updated_place.latitude, 'longitude' : updated_place.longitude}, 200

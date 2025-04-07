@@ -7,7 +7,7 @@ api = Namespace('reviews', description='Review operations')
 review_model = api.model('Review', {
     'text': fields.String(required=True, description='Text of the review'),
     'rating': fields.Integer(required=True, description='Rating of the place (1-5)')
-}) #removed user_id because its only supposed to be set by the JWT
+})
 
 
 @api.route('/')
@@ -81,22 +81,18 @@ class ReviewResource(Resource):
     def put(self, review_id):
         """Update a review's information by ID"""
         review = facade.get_review(review_id)
-        # check if review exists in the database
         if not review:
             return {'error': 'Review not found'}, 404
         current_user = get_jwt_identity()
-        # users can only modify reviews they created
         if review.user_id != current_user:
             return {'error': 'Unauthorized action'}, 403
         review_data = api.payload
         review.text = review_data.get('text', review.text)
         review.rating = review_data.get('rating', review.rating)
-        # update review in the database
         updated_review = facade.update_review(review.id, {
             'text': review.text,
             'rating': review.rating,
         })
-        # check if database issue occured when updating review
         if not updated_review:
             return {'error': 'Failed to update this review'}, 500
         return {'id': review.id, 'text': review.text, 'rating': review.rating, 'user_id': review.user_id, 'place_id': review.place_id}, 200
@@ -111,15 +107,11 @@ class ReviewResource(Resource):
         review = facade.get_review(review_id)
         current_user_id = get_jwt_identity()
         claims = get_jwt()
-        # check if review exists in the database
         if not review:
             return {'error': 'Review not found'}, 404
-        # users can only delete reviews they created expect if is_admin=True
         if review.user_id != current_user_id and not claims.get('is_admin'):
             return {'error': 'Unauthorized action'}, 403
-        # delete review in the database
         deleted_review = facade.delete_review(review_id)
-        # check if database issue occured when deleting review
         if deleted_review:
             return {'error': 'Failed to delete this review'}, 500
         return {'message': 'Review deleted successfully'}, 200

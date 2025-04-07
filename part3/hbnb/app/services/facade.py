@@ -19,35 +19,27 @@ class HBnBFacade:
 
     """methods for user"""
     def create_user(self, user_data):
-        # Create a new user and store it in the repository
         user = User(**user_data)
         self.user_repo.add(user)
         return user
     
     def get_user(self, user_id):
-        # Retrieve a user from the repository
         return self.user_repo.get(user_id)
     
     def get_user_by_email(self, email):
-        # Retrieve a user by email from the repository
         return self.user_repo.get_user_by_email(email)
     
     def get_all_users(self):
-        # Retrieve all users from the repository
         return self.user_repo.get_all()
     
     def update_user(self, user_id, user_data):
-        # Update user data
         user = self.user_repo.get(user_id)
         if not user:
             return None
-        # Update the user fields
         user.first_name = user_data.get('first_name', user.first_name)
         user.last_name = user_data.get('last_name', user.last_name)
 
-        # Save the updated user in the database
         db.session.commit()
-        # Return the updated user
         return user
     
     def get_user_by_id(self, user_id):

@@ -22,7 +22,6 @@ class UserList(Resource):
     def post(self):
         """Register a new user"""
         user_data = api.payload
-        # Simulate email uniqueness check (to be replaced by real validation with persistence)
         existing_user = facade.get_user_by_email(user_data['email'])
         if existing_user:
             return {'error': 'Email already registered'}, 400
@@ -39,7 +38,7 @@ class UserList(Resource):
         users = facade.get_all_users()
         if not users:
             return {'error': 'No users found'}, 404
-        return [{'id': user.id, 'first_name': user.first_name, 'last_name': user.last_name, 'email': user.email} for user in users], 200
+        return [{'id': user.id, 'first_name': user.first_name, 'last_name': user.last_name, 'email': user.email, 'is_admin': user.is_admin} for user in users], 200
 
 @api.route('/<user_id>')
 class UserResource(Resource):
@@ -62,21 +61,17 @@ class UserResource(Resource):
         """Update user details"""
         user = facade.get_user(user_id)
         current_user_id = get_jwt_identity()
-        # check if user exists in the database
         if not user:
             return {'error': 'User not found'}, 404
-        # user can only modify their own details
        
         if current_user_id != user_id:
             return {'error': 'Unauthorized action'}, 403
         
         user_data = api.payload
-        # user cannot modify their email or password
         if 'email' in user_data or 'password' in user_data:
             return {'error': 'You cannot modify email or password'}, 400
         # update user in the database
         updated_user = facade.update_user(user_id, user_data)
-        # check if database issue occured when updating user
         if not updated_user:
             return {'error': 'Failed to update user'}, 500
         return {'id': current_user_id, 'first_name': updated_user.first_name, 'last_name': updated_user.last_name, 'email': updated_user.email}, 200
@@ -94,14 +89,13 @@ class AdminUserCreate(Resource):
         user_data = request.json
         email = user_data.get('email')
 
-        # Check if email is already in use
         if facade.get_user_by_email(email):
             return {'error': 'Email already registered'}, 400
 
-        # Logic to create a new user
         try:
+            user_data['is_admin'] = True
             new_user = facade.create_user(user_data)
-            return {'id': new_user.id, 'first_name': new_user.first_name, 'last_name': new_user.last_name, 'email': new_user.email}, 201
+            return {'id': new_user.id, 'first_name': new_user.first_name, 'last_name': new_user.last_name, 'email': new_user.email, 'is_admin': new_user.is_admin}, 201
         except ValueError:
             return {'error': 'Invalid input data'}, 400
 
@@ -123,7 +117,6 @@ class AdminUserModify(Resource):
         data = request.json
         email = data.get('email')
 
-        # Ensure email uniqueness
         if email:
             existing_user = facade.get_user_by_email(email)
             if existing_user and existing_user.id != user_id:
@@ -133,9 +126,7 @@ class AdminUserModify(Resource):
         if not user:
             return {'error': 'User not found'}, 404
        
-        # Logic to update user details
         updated_user = facade.update_user(user_id, data)
-        #check if user was updated
         if not updated_user:
             return {'error': 'Failed to update user'}, 500
        

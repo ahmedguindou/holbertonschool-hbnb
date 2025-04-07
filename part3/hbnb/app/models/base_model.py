@@ -1,11 +1,10 @@
-#!/usr/bin/python3
 from app import db
 import uuid
 from datetime import datetime, timezone
 
 
 class BaseModel(db.Model):
-    __abstract__ = True  # This ensures SQLAlchemy does not create a table for BaseModel
+    __abstract__ = True
 
     id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
     created_at = db.Column(db.DateTime, default=datetime.now(timezone.utc))
@@ -20,4 +19,4 @@ class BaseModel(db.Model):
         for key, value in data.items():
             if hasattr(self, key):
                 setattr(self, key, value)
-        self.save()  # Update the updated_at timestamp
+        self.save()

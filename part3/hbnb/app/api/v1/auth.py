@@ -30,12 +30,12 @@ class ProtectedResource(Resource):
     @jwt_required()
     def get(self):
         """Example protected endpoint"""
-        current_user_id = get_jwt_identity()  # This is now a string
-        claims = get_jwt()  # Get additional claims (like is_admin)
+        current_user_id = get_jwt_identity()
+        claims = get_jwt()
 
         return {
             'message': f'Hello, user {current_user_id}',
-            'is_admin': claims.get("is_admin", False)  # Get is_admin status
+            'is_admin': claims.get("is_admin", False)
         }, 200
 
 @api.route('/generate_admin_token')

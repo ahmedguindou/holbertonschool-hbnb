@@ -1,4 +1,3 @@
-#!/usr/bin/python3
 """
 this module contain a class User
 """
