@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Places to Stay</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="images/icon.png">
+</head>
+<body>
+    <header>
+        <div class="logo-container">
+            <img src="images/logo.png" alt="Places Logo" class="logo">
+            <h1>Places to Stay</h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="index.html" class="active">Home</a></li>
+                <li><a href="login.html" id="login-link" class="login-button">Login</a></li>
+            </ul>
+        </nav>
+    </header>
+    
+    <main>
+        <section id="filter">
+            <div class="filter-container">
+                <label for="price-filter">Max Price:</label>
+                <select id="price-filter">
+                    <option value="all">All Prices</option>
+                    <option value="50">Under $50</option>
+                    <option value="100">Under $100</option>
+                    <option value="150">Under $150</option>
+                    <option value="200">Under $200</option>
+                    <option value="300">Under $300</option>
+                </select>
+            </div>
+        </section>
+        
+        <section id="places-list">
+            <div class="place-card">
+                <img src="images/place1.jpg" alt="Cozy Apartment">
+                <h3>Cozy Downtown Apartment</h3>
+                <p class="price">$120 per night</p>
+                <p class="description">A beautiful downtown apartment with amazing views.</p>
+                <a href="place.html?id=1" class="details-button">View Details</a>
+            </div>
+            
+            <div class="place-card">
+                <img src="images/place2.jpg" alt="Beach House">
+                <h3>Beachfront Villa</h3>
+                <p class="price">$250 per night</p>
+                <p class="description">Luxury villa with direct beach access.</p>
+                <a href="place.html?id=2" class="details-button">View Details</a>
+            </div>
+            
+            <div class="place-card">
+                <img src="images/place3.jpg" alt="Mountain Cabin">
+                <h3>Mountain Retreat</h3>
+                <p class="price">$180 per night</p>
+                <p class="description">Peaceful cabin in the mountains with hiking trails nearby.</p>
+                <a href="place.html?id=3" class="details-button">View Details</a>
+            </div>
+            
+            <div class="place-card">
+                <img src="images/place4.jpg" alt="City Loft">
+                <h3>Modern City Loft</h3>
+                <p class="price">$140 per night</p>
+                <p class="description">Stylish loft in the heart of the entertainment district.</p>
+                <a href="place.html?id=4" class="details-button">View Details</a>
+            </div>
+        </section>
+    </main>
+    
+    <footer>
+        <p>&copy; 2025 Places to Stay. All rights reserved.</p>
+    </footer>
+    
+    <script src="scripts.js"></script>
+</body>
+</html>
